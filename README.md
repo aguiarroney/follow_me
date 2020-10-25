@@ -1,4 +1,4 @@
-# follow Me
+# Follow Me
 
 A new Flutter application.
 
