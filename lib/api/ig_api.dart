@@ -7,10 +7,9 @@ import 'package:http/http.dart' as http;
 
 class IgApi{
 
-//  static const igCientToken = IGQVJXRDJpLWwxMWpCazdjV1l4amJHVW9UZAEh6MkFmbDUwcWR5OGFELXdEdE5VWHBjcEYxTUNoWk1CVXFMSE0tQWhsUzNwcUtYVTR3SzByYU9sbEpJZA1JETmlhRlY4RTlsUDVZAWmVDZAmd0MmZAVY0dScwZDZD;
-  static const igClientSecret = "824e5dcb3eb4f28b5407d2d4a581b985";
-  static const igClientId = "276282983613850";
-  static const igRedirectURI = "https://followme.com.br/";
+  static const igClientSecret = "ACB";
+  static const igClientId = "XPTO";
+  static const igRedirectURI = "www.exemple.com";
   UserModelSingleton _user;
 
   final simpleAuth.InstagramApi _igApi = simpleAuth.InstagramApi(
