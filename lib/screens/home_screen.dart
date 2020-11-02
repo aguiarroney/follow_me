@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:follow_me/api/ig_api.dart';
 import 'package:flutter/material.dart';
+import 'package:follow_me/bloc/midia_bloc.dart';
+import 'package:follow_me/bloc/user_bloc.dart';
 import 'package:follow_me/models/text_model.dart';
 import 'package:follow_me/models/user_model.dart';
 
@@ -8,9 +10,10 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-      IgApi api = IgApi(context);
+      UserBloc userBloc = UserBloc();
+      MidiaBloc midiaBloc = MidiaBloc();
       UserModelSingleton user = UserModelSingleton();
-      int index = 0;
+
       return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -21,7 +24,7 @@ class HomeScreen extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.assignment_ind),
               onPressed: (){
-                api.authenticate();
+                userBloc.authenticate(context);
               },
             ),
           ],
@@ -67,18 +70,24 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
-                child: user.getId() == null ? Container(): Container(
-                   width: 290,
-                   decoration: BoxDecoration(
-                     color: Colors.white,
-                      borderRadius: BorderRadius.circular(2)
-                   ),
-                    child:Padding(
-                      padding: EdgeInsets.all(5),
-                      child: Image.network(user.getMidiaUrls(index),),
-                    ),
-                )
+                Positioned(
+                    child: user.getId() == null? Center(child: TextCustom(text: "Log in",)) : Container(
+                       width: 290,
+                       decoration: BoxDecoration(
+                         color: Colors.white,
+                          borderRadius: BorderRadius.circular(2)
+                       ),
+                        child:Padding(
+                          padding: EdgeInsets.all(5),
+                          child: StreamBuilder<int>(
+                            stream: midiaBloc.outPutIndexStreamController,
+                            initialData: 0,
+                            builder: (context, snapshot){
+                              print("!!!! snapshot data: ${snapshot.data}");
+                              return Image.network(user.getMidiaUrls(snapshot.data),);
+                            }),
+                        ),
+                    )
               ),
               Positioned(
                 width: 290,
@@ -89,13 +98,13 @@ class HomeScreen extends StatelessWidget {
                     GestureDetector(
                       child: TextCustom(text: "Anterior"),
                       onTap: (){
-                        index--;
+                        midiaBloc.getPrevius();
                       },
                     ),
                     GestureDetector(
                       child: TextCustom(text: "Próximo"),
                         onTap: (){
-                          index++;
+                          midiaBloc.getNext();
                         },
                     ),
                   ],

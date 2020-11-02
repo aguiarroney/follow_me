@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class UserModelSingleton{
 
   static final UserModelSingleton _userModelSingleton = UserModelSingleton._internal();

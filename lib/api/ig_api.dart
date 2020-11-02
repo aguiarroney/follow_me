@@ -7,10 +7,9 @@ import 'package:http/http.dart' as http;
 
 class IgApi{
 
-  static const igClientSecret = "ACB";
-  static const igClientId = "XPTO";
-  static const igRedirectURI = "www.exemple.com";
-  UserModelSingleton _user;
+  static const igClientSecret = "824e5dcb3eb4f28b5407d2d4a581b985";
+  static const igClientId = "276282983613850";
+  static const igRedirectURI = "https://followme.com.br/";
 
   final simpleAuth.InstagramApi _igApi = simpleAuth.InstagramApi(
     "instagram",
@@ -27,14 +26,15 @@ class IgApi{
     SimpleAuthFlutter.init(context);
   }
 
-  Future<void> authenticate() async{
+  Future<UserModelSingleton> authenticate() async{
     simpleAuth.OAuthAccount localUser;
 
     http.Response response = await _igApi.authenticate().then((user) async {
       localUser = user;
       return  http.get("https://graph.instagram.com/me?fields=username,id,account_type,media_count&access_token=${localUser.token}");
-
     });
+
+//    return response;
 
     if(response.statusCode == 200){
       var decoded = json.decode(response.body);
@@ -47,9 +47,10 @@ class IgApi{
       _user.setUserName(decoded["username"]);
       _user.setToken(localUser.token);
 
-      makeMidiaIdList(); 
-
+      makeMidiaIdList();
     }
+
+    return UserModelSingleton();
   }
 
   void makeMidiaIdList() async{
