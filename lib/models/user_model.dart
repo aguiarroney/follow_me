@@ -9,6 +9,16 @@ class UserModelSingleton{
   String _id;
   String _account_type;
   int _media_count;
+  String _userToken;
+  List<String> _midiaUrls = [];
+
+  void setToken(String token){
+    _userToken = token;
+  }
+
+  String getToken(){
+    return _userToken;
+  }
 
   void setLog(bool status){
     _isLoggedIn = status;
@@ -30,9 +40,20 @@ class UserModelSingleton{
     _media_count = media;
   }
 
+  void addMidiaUrls(String id){
+
+    if(_midiaUrls == null)
+      _midiaUrls = List<String>();
+
+    _midiaUrls.add(id);
+  }
+
   bool getLogStatus() => _isLoggedIn;
   String getUserName() => _username;
   String getAccountType() => _account_type;
   String getId() => _id;
   int getMediaCount() => _media_count;
+  String getMidiaUrls(int index) {
+    return _midiaUrls[index];
+  }
 }

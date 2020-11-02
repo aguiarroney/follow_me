@@ -28,10 +28,12 @@ class IgApi{
   }
 
   Future<void> authenticate() async{
-    http.Response  response = await _igApi.authenticate().then((user) async {
-      simpleAuth.OAuthAccount localUser = user;
+    simpleAuth.OAuthAccount localUser;
+
+    http.Response response = await _igApi.authenticate().then((user) async {
+      localUser = user;
       return  http.get("https://graph.instagram.com/me?fields=username,id,account_type,media_count&access_token=${localUser.token}");
-//      return  http.get("https://graph.instagram.com/me/follows?access_token=${localUser.token}");
+
     });
 
     if(response.statusCode == 200){
@@ -43,8 +45,29 @@ class IgApi{
       _user.setMidiaCount(decoded["media_count"]);
       _user.setId(decoded["id"]);
       _user.setUserName(decoded["username"]);
+      _user.setToken(localUser.token);
+
+      makeMidiaIdList(); 
 
     }
+  }
 
+  void makeMidiaIdList() async{
+    UserModelSingleton _user = UserModelSingleton();
+
+    http.Response midiaResponse = await http.get("https://graph.instagram.com/${_user.getId()}/media?access_token=${_user.getToken()}");
+
+    if(midiaResponse.statusCode == 200){
+      var decodedMidia = json.decode(midiaResponse.body);
+      for (var item in decodedMidia["data"]){
+        http.Response urlResponse = await http.get("https://graph.instagram.com/${item["id"]}?fields=id,media_type,media_url,username,timestamp&access_token=${_user.getToken()}");
+
+        if(urlResponse.statusCode == 200){
+          var urlDecoded = json.decode(urlResponse.body);
+//          print("!!!! ${urlDecoded["media_url"]}");
+          _user.addMidiaUrls(urlDecoded["media_url"]);
+        }
+      }
+    }
   }
 }
