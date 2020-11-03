@@ -1,5 +1,3 @@
-import 'package:flutter/cupertino.dart';
-
 class UserModelSingleton{
 
   static final UserModelSingleton _userModelSingleton = UserModelSingleton._internal();
@@ -55,7 +53,10 @@ class UserModelSingleton{
   String getAccountType() => _account_type;
   String getId() => _id;
   int getMediaCount() => _media_count;
-  String getMidiaUrls(int index) {
+  String getMidiaByIndex(int index) {
     return _midiaUrls[index];
   }
+
+  int get getMidiaUrlsQnt => _midiaUrls.length;
+  List<String> get getMidiaUrl => _midiaUrls;
 }

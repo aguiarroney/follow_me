@@ -34,7 +34,6 @@ class IgApi{
       return  http.get("https://graph.instagram.com/me?fields=username,id,account_type,media_count&access_token=${localUser.token}");
     });
 
-//    return response;
 
     if(response.statusCode == 200){
       var decoded = json.decode(response.body);
@@ -47,13 +46,12 @@ class IgApi{
       _user.setUserName(decoded["username"]);
       _user.setToken(localUser.token);
 
-      makeMidiaIdList();
     }
 
     return UserModelSingleton();
   }
 
-  void makeMidiaIdList() async{
+  Future<List<String>> makeMidiaIdList() async{
     UserModelSingleton _user = UserModelSingleton();
 
     http.Response midiaResponse = await http.get("https://graph.instagram.com/${_user.getId()}/media?access_token=${_user.getToken()}");
@@ -70,5 +68,7 @@ class IgApi{
         }
       }
     }
+
+    return _user.getMidiaUrl;
   }
 }
